@@ -40,13 +40,13 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          scrolled ? "navbar-glass shadow-lg py-4" : "bg-[#1a1a1a]/80 py-5"
+        className={`fixed top-0 w-full z-50 transition-all duration-300 py-5 ${
+          scrolled ? "navbar-glass shadow-lg" : "bg-[#153448]/80"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
-          <a href="#home" className="logo-gradient text-2xl font-bold tracking-tight">
+          <a href="#home" className="text-[#f4f4f4] text-2xl font-bold tracking-tight">
             Portfolio
           </a>
 
@@ -59,7 +59,7 @@ export default function Navbar() {
                   onClick={() => setActive(sec.id)}
                   className={`nav-link text-sm font-medium tracking-wide ${
                     active === sec.id
-                      ? "text-[#10a879] active"
+                      ? "text-[#F4F4F4] active"
                       : "text-gray-400 hover:text-white"
                   }`}
                 >
@@ -73,7 +73,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <a
               href="#contact"
-              className="bg-gradient-to-r from-[#10a879] to-[#065039] text-white px-7 py-3 rounded-full text-sm font-medium hover:shadow-lg hover:shadow-[#065039]/30 transition-all duration-300 hover:scale-105"
+              className="bg-[#f4f4f4] text-[#153448] px-7 py-3 rounded-full text-sm font-medium hover:shadow-lg hover:shadow-[#f4f4f4]/30 transition-all duration-300 hover:scale-105"
             >
               Let's Talk
             </a>
@@ -92,7 +92,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenu && (
-        <div className="fixed inset-0 z-40 bg-[#1a1a1a]/95 backdrop-blur-lg md:hidden">
+        <div className="fixed inset-0 z-40 bg-[#153448]/95 backdrop-blur-lg md:hidden">
           <div className="flex flex-col items-center justify-center h-full space-y-8">
             {sections.map((sec) => (
               <a
@@ -104,7 +104,7 @@ export default function Navbar() {
                 }}
                 className={`text-2xl font-medium transition-colors ${
                   active === sec.id
-                    ? "text-[#10a879]"
+                    ? "text-[#F4F4F4]"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
@@ -114,7 +114,7 @@ export default function Navbar() {
             <a
               href="#contact"
               onClick={() => setMobileMenu(false)}
-              className="bg-gradient-to-r from-[#10a879] to-[#065039] text-white px-8 py-3.5 rounded-full text-lg font-medium mt-6"
+              className="bg-[#f4f4f4] text-[#153448] px-8 py-3.5 rounded-full text-lg font-medium mt-6"
             >
               Let's Talk
             </a>

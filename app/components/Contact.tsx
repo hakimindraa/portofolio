@@ -33,7 +33,7 @@ const socialLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="bg-gradient-to-br from-[#1f2937] via-[#1a1a1a] to-[#1f2937] py-24 px-6">
+    <section id="contact" className="bg-[#153448] py-24 px-6 shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -44,9 +44,9 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-5xl md:text-6xl font-light mb-4 text-white">
-            Get In <span className="font-bold text-[#10a879]">Touch</span>
+            Get In <span className="font-bold text-[#F4F4F4]">Touch</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#10a879] to-[#065039] mx-auto rounded-full mb-6"></div>
+          <div className="w-20 h-1 bg-gradient-to-r from-[#F4F4F4] to-white mx-auto rounded-full mb-6"></div>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
             Have a project in mind? Let's collaborate and create something amazing together.
           </p>
@@ -85,7 +85,7 @@ export default function Contact() {
                     viewport={{ once: true }}
                     className="contact-info-card flex items-center gap-4 group cursor-pointer"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#10a879] to-[#065039] flex items-center justify-center flex-shrink-0">
+                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                       <Icon className="text-white" size={24} />
                     </div>
                     <div>
@@ -173,7 +173,7 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#10a879] to-[#065039] text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:shadow-[#065039]/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                className="w-full bg-white text-[#153448] px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:shadow-white/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
               >
                 <Send size={20} />
                 Send Message

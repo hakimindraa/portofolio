@@ -44,8 +44,12 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="bg-white py-24 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="services" className="relative overflow-hidden py-24 px-6">
+      {/* Background (non-rotated for mobile consistency) */}
+      <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
+      
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -54,11 +58,11 @@ export default function Services() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl font-light mb-4">
-            My <span className="font-bold text-[#065039]">Services</span>
+          <h2 className="text-5xl md:text-6xl font-light mb-4 text-white">
+            My <span className="font-bold text-[#F4F4F4]">Services</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#10a879] to-[#065039] mx-auto rounded-full mb-6"></div>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <div className="w-20 h-1 bg-gradient-to-r from-[#F4F4F4] to-white mx-auto rounded-full mb-6"></div>
+          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
             Offering a wide range of creative services to bring your vision to life.
           </p>
         </motion.div>
@@ -74,15 +78,15 @@ export default function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="service-card group"
+                className="service-card group bg-[#f4f4f4] border-gray-200"
               >
                 <span className="service-number">0{service.id}</span>
                 
                 <div className="service-icon mb-6">
-                  <Icon className="text-[#065039]" size={32} strokeWidth={1.5} />
+                  <Icon className="text-[#153448]" size={32} strokeWidth={1.5} />
                 </div>
 
-                <h3 className="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-[#065039] transition-colors">
+                <h3 className="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-[#153448] transition-colors">
                   {service.title}
                 </h3>
 
@@ -90,7 +94,7 @@ export default function Services() {
                   {service.description}
                 </p>
 
-                <div className="mt-6 inline-flex items-center text-[#065039] font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-6 inline-flex items-center text-[#153448] font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                   Learn More
                   <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -109,7 +113,7 @@ export default function Services() {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <div className="bg-gradient-to-r from-[#10a879] to-[#065039] rounded-3xl p-12 text-white">
+          <div className="bg-white/10 border border-white/20 rounded-3xl p-12 text-white">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">
               Ready to Start Your Project?
             </h3>
@@ -118,7 +122,7 @@ export default function Services() {
             </p>
             <a
               href="#contact"
-              className="inline-block bg-white text-[#065039] px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
+              className="inline-block bg-white text-[#153448] px-8 py-4 rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 hover:scale-105 shadow-lg"
             >
               Get Started
             </a>

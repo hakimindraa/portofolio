@@ -33,15 +33,19 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-white border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 py-16">
+    <footer className="relative overflow-hidden border-t border-white/20">
+      {/* Background (non-rotated for mobile consistency) */}
+      <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
+      
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand Section */}
           <div className="space-y-6">
-            <Link href="#home" className="logo-gradient text-2xl font-bold tracking-tight">
+            <Link href="#home" className="text-white text-2xl font-bold tracking-tight">
               Portfolio
             </Link>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed">
               Creating stunning visuals and memorable experiences through photography and design.
             </p>
             <div className="flex gap-3">
@@ -69,7 +73,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-gray-900 font-semibold mb-6">Quick Links</h3>
+            <h3 className="text-white font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-3">
               {navigation.main.map((item) => (
                 <li key={item.name}>
@@ -83,7 +87,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-gray-900 font-semibold mb-6">Services</h3>
+            <h3 className="text-white font-semibold mb-6">Services</h3>
             <ul className="space-y-3">
               {navigation.services.map((item) => (
                 <li key={item.name}>
@@ -97,22 +101,22 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-gray-900 font-semibold mb-6">Get in Touch</h3>
+            <h3 className="text-white font-semibold mb-6">Get in Touch</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-gray-600">
-                <Mail size={18} className="text-[#065039] mt-1 flex-shrink-0" />
-                <a href="mailto:hello@example.com" className="hover:text-[#065039] transition">
+              <li className="flex items-start gap-3 text-gray-300">
+                <Mail size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
+                <a href="mailto:hello@example.com" className="hover:text-white transition">
                   hello@example.com
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-gray-600">
-                <Phone size={18} className="text-[#065039] mt-1 flex-shrink-0" />
-                <a href="tel:+1234567890" className="hover:text-[#065039] transition">
+              <li className="flex items-start gap-3 text-gray-300">
+                <Phone size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
+                <a href="tel:+1234567890" className="hover:text-white transition">
                   +1 234 567 890
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-gray-600">
-                <MapPin size={18} className="text-[#065039] mt-1 flex-shrink-0" />
+              <li className="flex items-start gap-3 text-gray-300">
+                <MapPin size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
                 <span>Istanbul, Turkey</span>
               </li>
             </ul>
@@ -124,15 +128,15 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-600 text-sm flex items-center gap-1">
+          <p className="text-gray-300 text-sm flex items-center gap-1">
             &copy; {new Date().getFullYear()} Portfolio. Made with <Heart size={14} className="text-red-500 fill-red-500" /> by Can.
           </p>
           
           <div className="flex items-center gap-6 text-sm">
-            <a href="#" className="text-gray-600 hover:text-[#065039] transition">
+            <a href="#" className="text-gray-300 hover:text-white transition">
               Privacy Policy
             </a>
-            <a href="#" className="text-gray-600 hover:text-[#065039] transition">
+            <a href="#" className="text-gray-300 hover:text-white transition">
               Terms of Service
             </a>
           </div>
@@ -140,7 +144,7 @@ export default function Footer() {
           {/* Scroll to Top */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 text-sm font-medium text-[#065039] hover:text-[#10a879] transition group"
+            className="flex items-center gap-2 text-sm font-medium text-white hover:text-[#F4F4F4] transition group"
             aria-label="Scroll to top"
           >
             Back to Top

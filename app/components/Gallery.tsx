@@ -29,8 +29,12 @@ export default function Gallery() {
     : displayPhotos.filter((p: any) => p.category === activeCategory);
 
   return (
-    <section id="gallery" className="gradient-bg py-24 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="gallery" className="relative overflow-hidden py-24 px-6">
+      {/* Background (non-rotated for mobile consistency) */}
+      <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
+      
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -39,11 +43,11 @@ export default function Gallery() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-5xl md:text-6xl font-light mb-4">
-            My <span className="font-bold text-[#065039]">Portfolio</span>
+          <h2 className="text-5xl md:text-6xl font-light mb-4 text-white">
+            My <span className="font-bold text-[#F4F4F4]">Portfolio</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-[#10a879] to-[#065039] mx-auto rounded-full mb-6"></div>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <div className="w-20 h-1 bg-white mx-auto rounded-full mb-6"></div>
+          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
             Capturing moments that tell stories. Browse through my recent works.
           </p>
         </motion.div>
@@ -108,7 +112,7 @@ export default function Gallery() {
         >
           <a
             href="/gallery"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#10a879] to-[#065039] text-white px-8 py-4 rounded-full text-base font-medium hover:shadow-lg hover:shadow-[#065039]/30 transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 bg-white text-[#153448] px-8 py-4 rounded-full text-base font-medium hover:shadow-lg hover:shadow-white/30 transition-all duration-300 hover:scale-105"
           >
             View All Projects
             <ArrowRight size={20} />

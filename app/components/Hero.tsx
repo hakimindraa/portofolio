@@ -6,8 +6,11 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
     <>
-      <section id="home" className="relative bg-[#1a1a1a] text-white min-h-screen flex items-center pt-20">
-        <div className="max-w-7xl mx-auto px-6 py-16 w-full">
+      <section id="home" className="relative overflow-hidden bg-[#153448]">
+        
+        {/* Content */}
+        <div className="relative text-white min-h-screen flex items-center pt-20 pb-20">
+          <div className="max-w-7xl mx-auto px-6 py-16 w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <motion.div
@@ -16,7 +19,7 @@ export default function Hero() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight mb-6">
-                Hello, <span className="text-[#065039] font-bold">I'm Can.</span>
+                Hello, <span className="text-[#F4F4F4] font-bold">I'm Can.</span>
               </h1>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8">
                 Creative Designer
@@ -29,10 +32,10 @@ export default function Hero() {
                 feugiat. Lacinia pretium duis pellentesque et nec ipsum est.
               </p>
               <div className="flex gap-4">
-                <button className="bg-white text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition">
+                <button className="bg-gray-50 text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-200 transition">
                   Get in Touch
                 </button>
-                <button className="border border-white text-white px-8 py-3.5 rounded-full font-medium hover:bg-white hover:text-black transition">
+                <button className="border border-white text-white px-8 py-3.5 rounded-full font-medium hover:bg-gray-50 hover:text-black transition">
                   View All Works
                 </button>
               </div>
@@ -58,15 +61,28 @@ export default function Hero() {
             </motion.div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* Scrolling Text */}
-      <div className="bg-white py-4 overflow-hidden relative border-y-4 border-black rotate-[-2deg] my-8">
+      <div className="bg-gray-100 py-4 overflow-hidden relative border-y-4 border-[#153448] rotate-[-4deg] -mt-21">
         <div className="flex animate-scroll whitespace-nowrap">
           {[...Array(20)].map((_, i) => (
             <div key={i} className="flex items-center mx-6">
               <span className="text-black font-medium text-lg">Photographer</span>
-              <span className="text-[#065039] text-2xl mx-3">◆</span>
+              <span className="text-[#153448] text-2xl mx-3">◆</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Scrolling Text */}
+      <div className="bg-gray-100 py-4 overflow-hidden relative border-y-4 border-[#153448] rotate-[0deg] my-1.7">
+        <div className="flex animate-scroll whitespace-nowrap">
+          {[...Array(20)].map((_, i) => (
+            <div key={i} className="flex items-center mx-6">
+              <span className="text-black font-medium text-lg">Photo Editing</span>
+              <span className="text-[#153448] text-2xl mx-3">◆</span>
             </div>
           ))}
         </div>
