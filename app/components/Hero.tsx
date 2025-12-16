@@ -19,12 +19,12 @@ export default function Hero() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight mb-6">
-                Hello, <span className="text-[#F4F4F4] font-bold">I'm Can.</span>
+                Hello, <span className="text-[#F4F4F4] font-bold">I'm Hakim.</span>
               </h1>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8">
-                Creative Designer
+                Photo Editing
                 <br />
-                in Turkey.
+                in Tanjungpinang.
               </h2>
               <p className="text-gray-400 leading-relaxed mb-10 max-w-xl text-base">
                 Lorem ipsum dolor sit amet consectetur. At libero sit nec tincidunt
