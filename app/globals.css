@@ -1,26 +1,494 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #ffffff;
+  --text: #0a0a0a;
+  --accent: #065039;
+  --green-primary: #065039;
+  --green-dark: #043528;
+  --green-darker: #022218;
+  --green-light: #0a7d5c;
+  --green-lighter: #10a879;
+  --gray-light: #f8f9fa;
+  --gray-border: #e5e7eb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --bg: #0a0a0a;
+  --text: #f5f5f5;
+  --accent: #065039;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern Gradient Background */
+.gradient-bg {
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+}
+
+/* Card Hover Effect */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Animated Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Green Gradient */
+.green-gradient {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+}
+
+/* Icon Container */
+.icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.icon-container:hover {
+  transform: scale(1.1);
+}
+
+/* Smooth Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Contact Form Styles */
+.contact-input-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.contact-input,
+.contact-textarea {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #10a879;
+  box-shadow: 0 0 0 4px rgba(16, 168, 121, 0.1);
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.contact-input-wrapper:focus-within .contact-icon {
+  color: #10a879;
+}
+
+.contact-textarea-wrapper .contact-icon {
+  top: 1.5rem;
+  transform: none;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  border-color: #10a879;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(16, 168, 121, 0.3);
+}
+
+.contact-info-card {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.contact-info-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #10a879;
+  transform: translateY(-4px);
+}
+
+/* Footer Styles */
+.footer-link {
+  position: relative;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #10a879;
+  transition: width 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #10a879;
+}
+
+.footer-link:hover::after {
+  width: 100%;
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: rgba(6, 80, 57, 0.1);
+  color: #065039;
+  transition: all 0.3s ease;
+}
+
+.footer-social:hover {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  color: white;
+  transform: translateY(-4px);
+}
+
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+}
+
+/* Contact Form Styles */
+.contact-input-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.contact-input,
+.contact-textarea {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #10a879;
+  box-shadow: 0 0 0 4px rgba(16, 168, 121, 0.1);
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.contact-input-wrapper:focus-within .contact-icon {
+  color: #10a879;
+}
+
+.contact-textarea-wrapper .contact-icon {
+  top: 1.5rem;
+  transform: none;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  border-color: #10a879;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(16, 168, 121, 0.3);
+}
+
+.contact-info-card {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.contact-info-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #10a879;
+  transform: translateY(-4px);
+}
+
+/* Services Card Styles */
+.service-card {
+  position: relative;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #10a879, #065039);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(6, 80, 57, 0.15);
+  border-color: #10a879;
+}
+
+.service-icon {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.service-card:hover .service-icon svg {
+  color: white;
+}
+
+.service-number {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  transition: color 0.3s ease;
+}
+
+.service-card:hover .service-number {
+  color: #e5e7eb;
+}
+
+/* Gallery Styles */
+.gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  aspect-ratio: 4/5;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(6, 80, 57, 0.3);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 80, 57, 0.9) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+.gallery-card:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.category-badge.active {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(6, 80, 57, 0.4);
+}
+
+.category-badge:not(.active) {
+  background: white;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.category-badge:not(.active):hover {
+  border-color: #065039;
+  color: #065039;
+}
+
+/* Navbar Styles */
+.navbar-glass {
+  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(26, 26, 26, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10a879, #065039);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.logo-gradient {
+  background: linear-gradient(135deg, #10a879 0%, #065039 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
