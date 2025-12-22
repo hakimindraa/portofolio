@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+
 const sections = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
+  { id: "services", label: "Services" },
   { id: "gallery", label: "Portfolio" },
   { id: "contact", label: "Contact" },
 ];
@@ -63,20 +66,22 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
-          <a href="#home" className="text-[#f4f4f4] text-2xl font-bold tracking-tight">
-            Portfolio
+          <a href="#home" className="flex items-center gap-2">
+            <span className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              Hakim
+            </span>
           </a>
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center gap-10">
+          <ul className="hidden md:flex items-center gap-8">
             {sections.map((sec) => (
               <li key={sec.id}>
                 <a
                   href={`#${sec.id}`}
                   onClick={() => setActive(sec.id)}
                   className={`nav-link text-sm font-medium tracking-wide ${active === sec.id
-                    ? "text-[#F4F4F4] active"
-                    : "text-gray-400 hover:text-white"
+                    ? "text-teal-400 active"
+                    : "text-gray-300 hover:text-white"
                     }`}
                 >
                   {sec.label}
@@ -85,32 +90,36 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* Right Side - Theme Toggle & CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <a
               href="#contact"
-              className="bg-[#f4f4f4] text-[#153448] px-7 py-3 rounded-full text-sm font-medium hover:shadow-lg hover:shadow-[#f4f4f4]/30 transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-7 py-3 rounded-full text-sm font-medium hover:shadow-lg hover:shadow-teal-500/30 transition-all duration-300 hover:scale-105"
             >
               Let's Talk
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenu(!mobileMenu)}
-            className="md:hidden text-white p-2"
-            aria-label="Toggle menu"
-          >
-            <HamburgerIcon isOpen={mobileMenu} />
-          </button>
+          {/* Mobile - Theme Toggle & Menu Button */}
+          <div className="md:hidden flex items-center gap-3">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenu(!mobileMenu)}
+              className="text-white p-2"
+              aria-label="Toggle menu"
+            >
+              <HamburgerIcon isOpen={mobileMenu} />
+            </button>
+          </div>
         </div>
       </nav>
 
       {/* Mobile Menu */}
       <div
         className={`fixed inset-0 z-40 bg-[#153448]/95 backdrop-blur-lg md:hidden transition-all duration-500 ease-in-out ${mobileMenu
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 -translate-y-full pointer-events-none"
+          ? "opacity-100 translate-y-0 pointer-events-auto"
+          : "opacity-0 -translate-y-full pointer-events-none"
           }`}
       >
         <div className="flex flex-col items-center justify-center h-full space-y-8">
@@ -123,8 +132,8 @@ export default function Navbar() {
                 setMobileMenu(false);
               }}
               className={`text-2xl font-medium transition-all duration-300 ${active === sec.id
-                  ? "text-[#F4F4F4]"
-                  : "text-gray-400 hover:text-white"
+                ? "text-teal-400"
+                : "text-gray-400 hover:text-white"
                 }`}
               style={{
                 transitionDelay: mobileMenu ? `${index * 100}ms` : "0ms",
@@ -138,7 +147,7 @@ export default function Navbar() {
           <a
             href="#contact"
             onClick={() => setMobileMenu(false)}
-            className="bg-[#f4f4f4] text-[#153448] px-8 py-3.5 rounded-full text-lg font-medium mt-6 transition-all duration-300"
+            className="bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-8 py-3.5 rounded-full text-lg font-medium mt-6 transition-all duration-300"
             style={{
               transitionDelay: mobileMenu ? `${sections.length * 100}ms` : "0ms",
               opacity: mobileMenu ? 1 : 0,

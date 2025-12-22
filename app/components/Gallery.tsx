@@ -1,38 +1,64 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { photos } from "@/app/data/photos";
-import { Camera, Heart, Sparkles, Mountain, Film, Grid3x3, ArrowRight } from "lucide-react";
+import { Camera, Heart, Sparkles, Mountain, Film, Grid3x3, ArrowRight, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+
+interface Photo {
+  id: string;
+  title: string;
+  category: string;
+  imageUrl: string;
+}
 
 const categories = [
   { id: "all", label: "All Works", icon: Grid3x3 },
-  { id: "portrait", label: "Portrait", icon: Camera },
-  { id: "wedding", label: "Wedding", icon: Heart },
-  { id: "street", label: "Street", icon: Sparkles },
-  { id: "nature", label: "Nature", icon: Mountain },
-  { id: "cinematic", label: "Cinematic", icon: Film },
+  { id: "Portrait", label: "Portrait", icon: Camera },
+  { id: "Wedding", label: "Wedding", icon: Heart },
+  { id: "Street", label: "Street", icon: Sparkles },
+  { id: "Nature", label: "Nature", icon: Mountain },
+  { id: "Event", label: "Event", icon: Film },
 ];
 
 export default function Gallery() {
   const [index, setIndex] = useState(-1);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch photos from database
+  useEffect(() => {
+    async function fetchPhotos() {
+      try {
+        const res = await fetch("/api/gallery");
+        if (res.ok) {
+          const data = await res.json();
+          setPhotos(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch photos:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPhotos();
+  }, []);
 
   // Limit to 6 photos for home page
   const displayPhotos = photos.slice(0, 6);
 
-  const filteredPhotos = activeCategory === "all" 
-    ? displayPhotos 
-    : displayPhotos.filter((p: any) => p.category === activeCategory);
+  const filteredPhotos = activeCategory === "all"
+    ? displayPhotos
+    : displayPhotos.filter((p) => p.category === activeCategory);
 
   return (
     <section id="gallery" className="relative overflow-hidden py-24 px-6">
       {/* Background (non-rotated for mobile consistency) */}
       <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
-      
+
       {/* Content */}
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
@@ -76,31 +102,41 @@ export default function Gallery() {
         </motion.div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredPhotos.map((photo: any, i: number) => (
-            <motion.div
-              key={photo.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              viewport={{ once: true }}
-              onClick={() => setIndex(i)}
-              className="gallery-card"
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-              <div className="gallery-overlay">
-                <h3 className="text-white font-semibold text-lg mb-1">{photo.alt}</h3>
-                <p className="text-white/80 text-sm capitalize">{photo.category}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="animate-spin text-white" size={40} />
+          </div>
+        ) : filteredPhotos.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400">Belum ada foto dalam kategori ini</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {filteredPhotos.map((photo, i) => (
+              <motion.div
+                key={photo.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                onClick={() => setIndex(i)}
+                className="gallery-card"
+              >
+                <Image
+                  src={photo.imageUrl}
+                  alt={photo.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="gallery-overlay">
+                  <h3 className="text-white font-semibold text-lg mb-1">{photo.title}</h3>
+                  <p className="text-white/80 text-sm capitalize">{photo.category}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* View All Button */}
         <motion.div
@@ -125,7 +161,7 @@ export default function Gallery() {
         open={index >= 0}
         index={index}
         close={() => setIndex(-1)}
-        slides={filteredPhotos.map((p: any) => ({ src: p.src }))}
+        slides={filteredPhotos.map((p) => ({ src: p.imageUrl }))}
       />
     </section>
   );
