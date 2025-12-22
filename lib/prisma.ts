@@ -19,7 +19,8 @@ function createPrismaClient() {
     }
 
     const pool = new Pool({ connectionString });
-    const adapter = new PrismaNeon(pool);
+    // Cast pool to any to avoid type mismatch errors between @neondatabase/serverless and @prisma/adapter-neon
+    const adapter = new PrismaNeon(pool as any);
     return new PrismaClient({ adapter });
 }
 
