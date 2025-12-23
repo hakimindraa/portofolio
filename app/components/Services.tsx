@@ -1,53 +1,102 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Camera, Palette, Video, Users, Award, Sparkles } from "lucide-react";
+import { Camera, Palette, Video, Users, Award, Sparkles, Image, Star, Heart, Zap, Target, Briefcase, LucideIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const services = [
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  order: number;
+  active: boolean;
+}
+
+// Icon mapping
+const iconMap: Record<string, LucideIcon> = {
+  Camera,
+  Palette,
+  Video,
+  Users,
+  Award,
+  Sparkles,
+  Image,
+  Star,
+  Heart,
+  Zap,
+  Target,
+  Briefcase,
+};
+
+// Default services (fallback if database is empty)
+const defaultServices = [
   {
-    id: 1,
+    id: "1",
     title: "Portrait Photography",
     description: "Professional portrait sessions capturing your unique personality and style with artistic vision.",
-    icon: Camera,
+    icon: "Camera",
   },
   {
-    id: 2,
+    id: "2",
     title: "Creative Design",
     description: "Innovative design solutions for branding, digital media, and visual identity projects.",
-    icon: Palette,
+    icon: "Palette",
   },
   {
-    id: 3,
+    id: "3",
     title: "Videography",
     description: "Cinematic video production for events, commercial projects, and storytelling content.",
-    icon: Video,
+    icon: "Video",
   },
   {
-    id: 4,
+    id: "4",
     title: "Event Coverage",
     description: "Comprehensive coverage of weddings, corporate events, and special occasions.",
-    icon: Users,
+    icon: "Users",
   },
   {
-    id: 5,
+    id: "5",
     title: "Photo Editing",
     description: "Expert post-processing and retouching to bring out the best in every image.",
-    icon: Sparkles,
+    icon: "Sparkles",
   },
   {
-    id: 6,
+    id: "6",
     title: "Creative Consultation",
     description: "Professional guidance and creative direction for your photography and design projects.",
-    icon: Award,
+    icon: "Award",
   },
 ];
 
 export default function Services() {
+  const [services, setServices] = useState(defaultServices);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const res = await fetch("/api/services");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.length > 0) {
+            setServices(data);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+      } finally {
+        setIsLoaded(true);
+      }
+    }
+    fetchServices();
+  }, []);
+
   return (
     <section id="services" className="relative overflow-hidden py-24 px-6">
       {/* Background (non-rotated for mobile consistency) */}
       <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
-      
+
       {/* Content */}
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
@@ -70,7 +119,7 @@ export default function Services() {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
-            const Icon = service.icon;
+            const Icon = iconMap[service.icon] || Camera;
             return (
               <motion.div
                 key={service.id}
@@ -80,8 +129,8 @@ export default function Services() {
                 viewport={{ once: true }}
                 className="service-card group bg-[#f4f4f4] border-gray-200"
               >
-                <span className="service-number">0{service.id}</span>
-                
+                <span className="service-number">0{index + 1}</span>
+
                 <div className="service-icon mb-6">
                   <Icon className="text-[#153448]" size={32} strokeWidth={1.5} />
                 </div>

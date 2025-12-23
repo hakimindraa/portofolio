@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import pool from "@/lib/db";
 
 // GET all testimonials
 export async function GET() {
     try {
-        const testimonials = await prisma.testimonial.findMany({
-            orderBy: { createdAt: "desc" },
-        });
-        return NextResponse.json(testimonials);
+        const result = await pool.query(
+            'SELECT * FROM "Testimonial" ORDER BY "createdAt" DESC'
+        );
+        return NextResponse.json(result.rows);
     } catch (error) {
         console.error("Error fetching testimonials:", error);
         return NextResponse.json({ error: "Failed to fetch testimonials" }, { status: 500 });
@@ -18,18 +16,18 @@ export async function GET() {
 
 // POST create new testimonial
 export async function POST(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
         const body = await request.json();
         const { name, role, content, rating, avatar } = body;
 
-        const testimonial = await prisma.testimonial.create({
-            data: { name, role, content, rating: rating || 5, avatar },
-        });
+        const result = await pool.query(
+            `INSERT INTO "Testimonial" (id, name, role, content, rating, avatar, "createdAt", "updatedAt")
+             VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, NOW(), NOW())
+             RETURNING *`,
+            [name, role, content, rating || 5, avatar || null]
+        );
 
-        return NextResponse.json(testimonial, { status: 201 });
+        return NextResponse.json(result.rows[0], { status: 201 });
     } catch (error) {
         console.error("Error creating testimonial:", error);
         return NextResponse.json({ error: "Failed to create testimonial" }, { status: 500 });
@@ -38,19 +36,23 @@ export async function POST(request: NextRequest) {
 
 // PUT update testimonial
 export async function PUT(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
         const body = await request.json();
         const { id, name, role, content, rating, avatar } = body;
 
-        const testimonial = await prisma.testimonial.update({
-            where: { id },
-            data: { name, role, content, rating, avatar },
-        });
+        const result = await pool.query(
+            `UPDATE "Testimonial" 
+             SET name = $1, role = $2, content = $3, rating = $4, avatar = $5, "updatedAt" = NOW()
+             WHERE id = $6
+             RETURNING *`,
+            [name, role, content, rating, avatar, id]
+        );
 
-        return NextResponse.json(testimonial);
+        if (result.rows.length === 0) {
+            return NextResponse.json({ error: "Testimonial not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(result.rows[0]);
     } catch (error) {
         console.error("Error updating testimonial:", error);
         return NextResponse.json({ error: "Failed to update testimonial" }, { status: 500 });
@@ -59,14 +61,16 @@ export async function PUT(request: NextRequest) {
 
 // DELETE testimonial
 export async function DELETE(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get("id");
 
-        await prisma.testimonial.delete({ where: { id: id! } });
+        if (!id) {
+            return NextResponse.json({ error: "Testimonial ID required" }, { status: 400 });
+        }
+
+        await pool.query('DELETE FROM "Testimonial" WHERE id = $1', [id]);
+
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Error deleting testimonial:", error);

@@ -1,59 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import pool from "@/lib/db";
 
 // GET all messages
 export async function GET() {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
-        const messages = await prisma.contactMessage.findMany({
-            orderBy: { createdAt: "desc" },
-        });
-        return NextResponse.json(messages);
+        const result = await pool.query(
+            'SELECT * FROM "ContactMessage" ORDER BY "createdAt" DESC'
+        );
+        return NextResponse.json(result.rows);
     } catch (error) {
         console.error("Error fetching messages:", error);
         return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
     }
 }
 
-// POST create new message (public - from contact form)
-export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
-        const { name, email, subject, message } = body;
-
-        const newMessage = await prisma.contactMessage.create({
-            data: { name, email, subject, message },
-        });
-
-        return NextResponse.json(newMessage, { status: 201 });
-    } catch (error) {
-        console.error("Error creating message:", error);
-        return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
-    }
-}
-
 // PUT update message (mark as read/replied)
 export async function PUT(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
         const body = await request.json();
         const { id, read, replied } = body;
 
-        const message = await prisma.contactMessage.update({
-            where: { id },
-            data: {
-                ...(typeof read === "boolean" && { read }),
-                ...(typeof replied === "boolean" && { replied }),
-            },
-        });
+        if (!id) {
+            return NextResponse.json({ error: "Message ID required" }, { status: 400 });
+        }
 
-        return NextResponse.json(message);
+        // Build dynamic update query
+        const updates: string[] = [];
+        const values: (string | boolean)[] = [];
+        let paramIndex = 1;
+
+        if (typeof read === "boolean") {
+            updates.push(`read = $${paramIndex++}`);
+            values.push(read);
+        }
+        if (typeof replied === "boolean") {
+            updates.push(`replied = $${paramIndex++}`);
+            values.push(replied);
+        }
+
+        if (updates.length === 0) {
+            return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+        }
+
+        values.push(id);
+        const query = `UPDATE "ContactMessage" SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`;
+        const result = await pool.query(query, values);
+
+        if (result.rows.length === 0) {
+            return NextResponse.json({ error: "Message not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(result.rows[0]);
     } catch (error) {
         console.error("Error updating message:", error);
         return NextResponse.json({ error: "Failed to update message" }, { status: 500 });
@@ -62,14 +59,16 @@ export async function PUT(request: NextRequest) {
 
 // DELETE message
 export async function DELETE(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     try {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get("id");
 
-        await prisma.contactMessage.delete({ where: { id: id! } });
+        if (!id) {
+            return NextResponse.json({ error: "Message ID required" }, { status: 400 });
+        }
+
+        await pool.query('DELETE FROM "ContactMessage" WHERE id = $1', [id]);
+
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Error deleting message:", error);

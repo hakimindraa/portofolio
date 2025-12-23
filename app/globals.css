@@ -60,8 +60,22 @@
   --gray-border: #2a2a2a;
 }
 
-* {
-  scroll-behavior: smooth;
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Smooth scroll - but respect user preferences */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Disable smooth scroll on mobile for better performance */
+@media (max-width: 768px) {
+  * {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -73,6 +87,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* Enable GPU acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* Prevent horizontal scrolling on mobile and lock horizontal touch pan */
@@ -84,6 +101,57 @@ body,
 
 body {
   touch-action: pan-y;
+  /* Improve touch scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ========================================
+   AGGRESSIVE FIX FOR JITTER / VIBRATION
+   ======================================== */
+
+/* Disable ALL animations globally to test if this fixes jitter */
+/* Comment this block out if you want animations back */
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Force hardware acceleration and prevent backface issues */
+html {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Prevent transform jitter */
+[style*="transform"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+/* Fixed elements stability */
+.fixed,
+[class*="fixed"] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Prevent counter animations from causing layout shifts */
+.counter-animation {
+  min-width: 100px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Disable all transform-based hover effects */
+.card-hover:hover,
+.group:hover>div {
+  transform: none !important;
 }
 
 /* Modern Gradient Background */

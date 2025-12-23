@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Heart, Instagram, Linkedin, Github, Twitter, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const navigation = {
   main: [
@@ -20,14 +21,65 @@ const navigation = {
   ],
 };
 
-const socialLinks = [
+interface SocialLink {
+  icon: React.ElementType;
+  href: string;
+  label: string;
+}
+
+const defaultSocialLinks: SocialLink[] = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
   { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   { icon: Github, href: "https://github.com", label: "GitHub" },
   { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
 ];
 
+interface ContactInfo {
+  email: string;
+  phone: string;
+  location: string;
+}
+
 export default function Footer() {
+  const [contactInfo, setContactInfo] = useState<ContactInfo>({
+    email: "hello@example.com",
+    phone: "+62 xxx xxxx xxxx",
+    location: "Indonesia",
+  });
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(defaultSocialLinks);
+  const [ownerName, setOwnerName] = useState("Hakim");
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          // Update contact info
+          setContactInfo({
+            email: data.email || "hello@example.com",
+            phone: data.phone || data.whatsapp || "+62 xxx xxxx xxxx",
+            location: data.location || "Indonesia",
+          });
+          // Update owner name
+          if (data.name) {
+            setOwnerName(data.name);
+          }
+          // Update social links
+          setSocialLinks([
+            { icon: Instagram, href: data.instagram ? `https://instagram.com/${data.instagram}` : "https://instagram.com", label: "Instagram" },
+            { icon: Linkedin, href: data.linkedin || "https://linkedin.com", label: "LinkedIn" },
+            { icon: Github, href: data.github || "https://github.com", label: "GitHub" },
+            { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+          ]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      }
+    }
+    fetchSettings();
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -36,7 +88,7 @@ export default function Footer() {
     <footer className="relative overflow-hidden border-t border-white/20">
       {/* Background (non-rotated for mobile consistency) */}
       <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
-      
+
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -105,19 +157,19 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-gray-300">
                 <Mail size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <a href="mailto:hello@example.com" className="hover:text-white transition">
-                  hello@example.com
+                <a href={`mailto:${contactInfo.email}`} className="hover:text-white transition">
+                  {contactInfo.email}
                 </a>
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Phone size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <a href="tel:+1234567890" className="hover:text-white transition">
-                  +1 234 567 890
+                <a href={`tel:${contactInfo.phone.replace(/\s/g, "")}`} className="hover:text-white transition">
+                  {contactInfo.phone}
                 </a>
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <MapPin size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <span>Istanbul, Turkey</span>
+                <span>{contactInfo.location}</span>
               </li>
             </ul>
           </div>
@@ -129,9 +181,9 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-300 text-sm flex items-center gap-1">
-            &copy; {new Date().getFullYear()} Portfolio. Made with <Heart size={14} className="text-red-500 fill-red-500" /> by Can.
+            &copy; {new Date().getFullYear()} Portfolio. Made with <Heart size={14} className="text-red-500 fill-red-500" /> by {ownerName}.
           </p>
-          
+
           <div className="flex items-center gap-6 text-sm">
             <a href="#" className="text-gray-300 hover:text-white transition">
               Privacy Policy

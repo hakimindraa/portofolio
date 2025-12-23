@@ -2,56 +2,69 @@
 
 import { motion } from "framer-motion";
 import { Instagram, Heart, MessageCircle, ExternalLink } from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 
-// Sample Instagram posts - Ganti dengan data asli dari Instagram API atau hardcode
-const instagramPosts = [
-    {
-        id: 1,
-        image: "/images/ig1.jpg",
-        likes: 234,
-        comments: 18,
-        caption: "Portrait session ✨",
-    },
-    {
-        id: 2,
-        image: "/images/ig2.jpg",
-        likes: 456,
-        comments: 32,
-        caption: "Wedding moments 💕",
-    },
-    {
-        id: 3,
-        image: "/images/ig3.jpg",
-        likes: 189,
-        comments: 12,
-        caption: "Nature vibes 🌿",
-    },
-    {
-        id: 4,
-        image: "/images/ig4.jpg",
-        likes: 312,
-        comments: 24,
-        caption: "Street photography 📸",
-    },
-    {
-        id: 5,
-        image: "/images/ig5.jpg",
-        likes: 278,
-        comments: 15,
-        caption: "Creative editing 🎨",
-    },
-    {
-        id: 6,
-        image: "/images/ig6.jpg",
-        likes: 345,
-        comments: 28,
-        caption: "Cinematic shots 🎬",
-    },
+interface InstagramPost {
+    id: string;
+    imageUrl: string;
+    caption: string | null;
+    likes: number;
+    comments: number;
+}
+
+// Default Instagram posts (fallback if database is empty)
+const defaultPosts: InstagramPost[] = [
+    { id: "1", imageUrl: "", caption: "Portrait session ✨", likes: 234, comments: 18 },
+    { id: "2", imageUrl: "", caption: "Wedding moments 💕", likes: 456, comments: 32 },
+    { id: "3", imageUrl: "", caption: "Nature vibes 🌿", likes: 189, comments: 12 },
+    { id: "4", imageUrl: "", caption: "Street photography 📸", likes: 312, comments: 24 },
+    { id: "5", imageUrl: "", caption: "Creative editing 🎨", likes: 278, comments: 15 },
+    { id: "6", imageUrl: "", caption: "Cinematic shots 🎬", likes: 345, comments: 28 },
+];
+
+// Placeholder gradient colors
+const gradientColors = [
+    "from-pink-400 to-purple-500",
+    "from-purple-400 to-blue-500",
+    "from-teal-400 to-cyan-500",
+    "from-orange-400 to-pink-500",
+    "from-cyan-400 to-teal-500",
+    "from-pink-500 to-orange-400",
 ];
 
 export default function InstagramFeed() {
-    const instagramUsername = "hakimlesmna"; // Ganti dengan username Instagram kamu
+    const [instagramUsername, setInstagramUsername] = useState("hakimiesmna");
+    const [posts, setPosts] = useState<InstagramPost[]>(defaultPosts);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                // Fetch instagram username from settings
+                const settingsRes = await fetch("/api/settings");
+                if (settingsRes.ok) {
+                    const settings = await settingsRes.json();
+                    if (settings.instagram) {
+                        setInstagramUsername(settings.instagram);
+                    }
+                }
+
+                // Fetch instagram posts
+                const postsRes = await fetch("/api/instagram");
+                if (postsRes.ok) {
+                    const data = await postsRes.json();
+                    if (data.length > 0) {
+                        setPosts(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch instagram data:", error);
+            } finally {
+                setIsLoaded(true);
+            }
+        }
+        fetchData();
+    }, []);
 
     return (
         <section className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
@@ -88,7 +101,7 @@ export default function InstagramFeed() {
 
                 {/* Instagram Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-                    {instagramPosts.map((post, index) => (
+                    {posts.map((post, index) => (
                         <motion.a
                             key={post.id}
                             href={`https://instagram.com/${instagramUsername}`}
@@ -100,26 +113,17 @@ export default function InstagramFeed() {
                             viewport={{ once: true }}
                             className="group relative aspect-square rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-800"
                         >
-                            {/* Placeholder gradient - Replace with actual images */}
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-br ${index % 6 === 0
-                                    ? "from-pink-400 to-purple-500"
-                                    : index % 6 === 1
-                                        ? "from-purple-400 to-blue-500"
-                                        : index % 6 === 2
-                                            ? "from-teal-400 to-cyan-500"
-                                            : index % 6 === 3
-                                                ? "from-orange-400 to-pink-500"
-                                                : index % 6 === 4
-                                                    ? "from-cyan-400 to-teal-500"
-                                                    : "from-pink-500 to-orange-400"
-                                    }`}
-                            />
-
-                            {/* Placeholder content */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-white/60 text-4xl font-bold">{post.id}</span>
-                            </div>
+                            {/* Image or Placeholder gradient */}
+                            {post.imageUrl ? (
+                                <img src={post.imageUrl} alt={post.caption || "Instagram"} className="w-full h-full object-cover" />
+                            ) : (
+                                <>
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[index % 6]}`} />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-white/60 text-4xl font-bold">{index + 1}</span>
+                                    </div>
+                                </>
+                            )}
 
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

@@ -1,9 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, User, Send, Instagram, Linkedin, Github, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, User, Send, Instagram, Linkedin, Github, Twitter, Loader2, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const contactInfo = [
+interface ContactInfo {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  link: string;
+}
+
+const defaultContactInfo: ContactInfo[] = [
   {
     icon: Mail,
     title: "Email",
@@ -19,12 +27,18 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Location",
-    value: "Turkey, Istanbul",
+    value: "Indonesia",
     link: "#",
   },
 ];
 
-const socialLinks = [
+interface SocialLink {
+  icon: React.ElementType;
+  href: string;
+  label: string;
+}
+
+const defaultSocialLinks: SocialLink[] = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
   { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   { icon: Github, href: "https://github.com", label: "GitHub" },
@@ -32,6 +46,91 @@ const socialLinks = [
 ];
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(defaultSocialLinks);
+
+  // Fetch contact info and social links from settings
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          // Update contact info
+          if (data.email || data.phone || data.location) {
+            setContactInfo([
+              {
+                icon: Mail,
+                title: "Email",
+                value: data.email || "hello@example.com",
+                link: `mailto:${data.email || "hello@example.com"}`,
+              },
+              {
+                icon: Phone,
+                title: "Phone",
+                value: data.phone || data.whatsapp || "+62 xxx xxxx xxxx",
+                link: `tel:${(data.phone || data.whatsapp || "+62").replace(/\s/g, "")}`,
+              },
+              {
+                icon: MapPin,
+                title: "Location",
+                value: data.location || "Indonesia",
+                link: "#",
+              },
+            ]);
+          }
+          // Update social links from settings
+          setSocialLinks([
+            { icon: Instagram, href: data.instagram ? `https://instagram.com/${data.instagram}` : "https://instagram.com", label: "Instagram" },
+            { icon: Linkedin, href: data.linkedin || "https://linkedin.com", label: "LinkedIn" },
+            { icon: Github, href: data.github || "https://github.com", label: "GitHub" },
+            { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+          ]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch contact settings:", error);
+      }
+    }
+    fetchSettings();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setSent(true);
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        // Reset sent status after 5 seconds
+        setTimeout(() => setSent(false), 5000);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to send message");
+      }
+    } catch (err) {
+      setError("Failed to send message. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <section id="contact" className="bg-[#153448] py-24 px-6 shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
       <div className="max-w-6xl mx-auto">
@@ -66,7 +165,7 @@ export default function Contact() {
                 Let's talk about everything!
               </h3>
               <p className="text-gray-400 leading-relaxed mb-8">
-                Don't like forms? Send me an email or reach out through social media. 
+                Don't like forms? Send me an email or reach out through social media.
                 I'm always happy to connect and discuss new projects.
               </p>
             </div>
@@ -74,7 +173,7 @@ export default function Contact() {
             {/* Contact Info Cards */}
             <div className="space-y-4">
               {contactInfo.map((info, index) => {
-                const Icon = info.icon;
+                const Icon = info.icon as React.ElementType;
                 return (
                   <motion.a
                     key={index}
@@ -83,14 +182,14 @@ export default function Contact() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="contact-info-card flex items-center gap-4 group cursor-pointer"
+                    className="contact-info-card flex items-center gap-4 group cursor-pointer overflow-hidden"
                   >
                     <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                       <Icon className="text-white" size={24} />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <p className="text-gray-500 text-sm">{info.title}</p>
-                      <p className="text-white font-medium">{info.value}</p>
+                      <p className="text-white font-medium break-all text-sm sm:text-base">{info.value}</p>
                     </div>
                   </motion.a>
                 );
@@ -131,7 +230,7 @@ export default function Contact() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="contact-input-wrapper">
                 <User className="contact-icon" size={20} />
                 <input
@@ -139,6 +238,8 @@ export default function Contact() {
                   placeholder="Your Name"
                   className="contact-input"
                   required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
 
@@ -149,15 +250,19 @@ export default function Contact() {
                   placeholder="Email Address"
                   className="contact-input"
                   required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
 
               <div className="contact-input-wrapper">
                 <Phone className="contact-icon" size={20} />
                 <input
-                  type="tel"
-                  placeholder="Phone Number (Optional)"
+                  type="text"
+                  placeholder="Subject"
                   className="contact-input"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 />
               </div>
 
@@ -168,16 +273,39 @@ export default function Contact() {
                   rows={6}
                   className="contact-textarea"
                   required
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-white text-[#153448] px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:shadow-white/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
-              >
-                <Send size={20} />
-                Send Message
-              </button>
+              {error && (
+                <p className="text-red-400 text-sm">{error}</p>
+              )}
+
+              {sent ? (
+                <div className="w-full bg-green-500 text-white px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-2">
+                  <CheckCircle size={20} />
+                  Message Sent Successfully!
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="w-full bg-white text-[#153448] px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:shadow-white/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
+                >
+                  {sending ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      Send Message
+                    </>
+                  )}
+                </button>
+              )}
             </form>
           </motion.div>
         </div>

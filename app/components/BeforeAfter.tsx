@@ -4,24 +4,32 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const comparisons = [
+interface ComparisonItem {
+    id: string;
+    title: string;
+    beforeImage: string;
+    afterImage: string;
+}
+
+// Default comparisons (fallback if database is empty)
+const defaultComparisons: ComparisonItem[] = [
     {
-        id: 1,
+        id: "1",
         title: "Portrait Retouching",
-        before: "/images/before1.jpg",
-        after: "/images/after1.jpg",
+        beforeImage: "/images/before1.jpg",
+        afterImage: "/images/after1.jpg",
     },
     {
-        id: 2,
+        id: "2",
         title: "Color Grading",
-        before: "/images/before2.jpg",
-        after: "/images/after2.jpg",
+        beforeImage: "/images/before2.jpg",
+        afterImage: "/images/after2.jpg",
     },
     {
-        id: 3,
+        id: "3",
         title: "Background Enhancement",
-        before: "/images/before3.jpg",
-        after: "/images/after3.jpg",
+        beforeImage: "/images/before3.jpg",
+        afterImage: "/images/after3.jpg",
     },
 ];
 
@@ -69,20 +77,28 @@ function ComparisonSlider({ before, after, title }: { before: string; after: str
                 onTouchStart={() => setIsDragging(true)}
             >
                 {/* After Image (Background) */}
-                <div className="absolute inset-0 bg-gray-800">
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-xl font-medium">
-                        After
-                    </div>
+                <div className="absolute inset-0">
+                    {after ? (
+                        <img src={after} alt="After" className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white text-xl font-medium">
+                            After
+                        </div>
+                    )}
                 </div>
 
                 {/* Before Image (Foreground with clip) */}
                 <div
-                    className="absolute inset-0 bg-gray-600"
+                    className="absolute inset-0"
                     style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
                 >
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-xl font-medium">
-                        Before
-                    </div>
+                    {before ? (
+                        <img src={before} alt="Before" className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-full h-full bg-gray-600 flex items-center justify-center text-white text-xl font-medium">
+                            Before
+                        </div>
+                    )}
                 </div>
 
                 {/* Slider Line */}
@@ -115,6 +131,27 @@ function ComparisonSlider({ before, after, title }: { before: string; after: str
 
 export default function BeforeAfter() {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [comparisons, setComparisons] = useState<ComparisonItem[]>(defaultComparisons);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        async function fetchComparisons() {
+            try {
+                const res = await fetch("/api/before-after");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setComparisons(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch before/after items:", error);
+            } finally {
+                setIsLoaded(true);
+            }
+        }
+        fetchComparisons();
+    }, []);
 
     return (
         <section id="before-after" className="relative overflow-hidden py-24 px-6 bg-[#153448]">
@@ -158,8 +195,8 @@ export default function BeforeAfter() {
                             key={item.id}
                             onClick={() => setActiveIndex(index)}
                             className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeIndex === index
-                                    ? "bg-gradient-to-r from-teal-400 to-cyan-400 text-white shadow-lg"
-                                    : "bg-white/10 text-gray-300 hover:bg-white/20"
+                                ? "bg-gradient-to-r from-teal-400 to-cyan-400 text-white shadow-lg"
+                                : "bg-white/10 text-gray-300 hover:bg-white/20"
                                 }`}
                         >
                             {item.title}
@@ -175,11 +212,13 @@ export default function BeforeAfter() {
                     transition={{ duration: 0.4 }}
                     className="max-w-3xl mx-auto"
                 >
-                    <ComparisonSlider
-                        before={comparisons[activeIndex].before}
-                        after={comparisons[activeIndex].after}
-                        title={comparisons[activeIndex].title}
-                    />
+                    {comparisons[activeIndex] && (
+                        <ComparisonSlider
+                            before={comparisons[activeIndex].beforeImage}
+                            after={comparisons[activeIndex].afterImage}
+                            title={comparisons[activeIndex].title}
+                        />
+                    )}
                 </motion.div>
 
                 {/* Instructions */}

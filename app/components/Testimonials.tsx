@@ -2,44 +2,72 @@
 
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 
-const testimonials = [
+interface Testimonial {
+    id: string;
+    name: string;
+    role: string;
+    content: string;
+    rating: number;
+    avatar?: string;
+}
+
+// Default testimonials (fallback if database is empty)
+const defaultTestimonials: Testimonial[] = [
     {
-        id: 1,
+        id: "1",
         name: "Sarah Johnson",
         role: "Wedding Client",
-        avatar: "/images/avatar1.jpg",
+        content: "Hakim captured our wedding day beautifully! Every photo tells a story. His attention to detail and creative vision exceeded our expectations.",
         rating: 5,
-        text: "Hakim captured our wedding day beautifully! Every photo tells a story. His attention to detail and creative vision exceeded our expectations.",
     },
     {
-        id: 2,
+        id: "2",
         name: "Michael Chen",
         role: "Business Owner",
-        avatar: "/images/avatar2.jpg",
+        content: "The product photography for our brand was exceptional. Hakim understood our vision perfectly and delivered stunning results that boosted our sales.",
         rating: 5,
-        text: "The product photography for our brand was exceptional. Hakim understood our vision perfectly and delivered stunning results that boosted our sales.",
     },
     {
-        id: 3,
+        id: "3",
         name: "Emily Rodriguez",
         role: "Model & Influencer",
-        avatar: "/images/avatar3.jpg",
+        content: "Working with Hakim was an amazing experience. His editing skills transformed my portfolio. Highly recommend for anyone looking for professional work!",
         rating: 5,
-        text: "Working with Hakim was an amazing experience. His editing skills transformed my portfolio. Highly recommend for anyone looking for professional work!",
     },
     {
-        id: 4,
+        id: "4",
         name: "David Park",
         role: "Event Organizer",
-        avatar: "/images/avatar4.jpg",
+        content: "We've hired Hakim for multiple corporate events. His professionalism and ability to capture key moments make him our go-to photographer.",
         rating: 5,
-        text: "We've hired Hakim for multiple corporate events. His professionalism and ability to capture key moments make him our go-to photographer.",
     },
 ];
 
 export default function Testimonials() {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        async function fetchTestimonials() {
+            try {
+                const res = await fetch("/api/testimonials");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setTestimonials(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch testimonials:", error);
+            } finally {
+                setIsLoaded(true);
+            }
+        }
+        fetchTestimonials();
+    }, []);
+
     return (
         <section id="testimonials" className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
             {/* Background Decoration */}
@@ -88,22 +116,26 @@ export default function Testimonials() {
 
                                 {/* Rating */}
                                 <div className="flex gap-1 mb-4 ml-6">
-                                    {[...Array(testimonial.rating)].map((_, i) => (
+                                    {[...Array(testimonial.rating || 5)].map((_, i) => (
                                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                                     ))}
                                 </div>
 
                                 {/* Text */}
                                 <p className="text-[var(--text-muted)] leading-relaxed mb-6 italic">
-                                    "{testimonial.text}"
+                                    "{testimonial.content}"
                                 </p>
 
                                 {/* Author */}
                                 <div className="flex items-center gap-4">
                                     <div className="w-14 h-14 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 p-0.5">
-                                        <div className="w-full h-full rounded-full bg-[var(--card-bg)] flex items-center justify-center text-xl font-bold text-teal-500">
-                                            {testimonial.name.charAt(0)}
-                                        </div>
+                                        {testimonial.avatar ? (
+                                            <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full rounded-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full rounded-full bg-[var(--card-bg)] flex items-center justify-center text-xl font-bold text-teal-500">
+                                                {testimonial.name.charAt(0)}
+                                            </div>
+                                        )}
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-[var(--text)]">{testimonial.name}</h4>

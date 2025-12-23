@@ -4,28 +4,59 @@ import { motion, useInView } from "framer-motion";
 import { Award, Briefcase, Users, Trophy, Camera, Palette } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
-// Animated Counter Hook
-function useCounter(end: number, duration: number = 2000, startOnView: boolean = true) {
+interface Settings {
+  name?: string;
+  location?: string;
+  aboutParagraph1?: string;
+  aboutParagraph2?: string;
+  cvUrl?: string;
+  statsYears?: string;
+  statsProjects?: string;
+  statsClients?: string;
+  statsAwards?: string;
+  skill1Name?: string;
+  skill1Level?: string;
+  skill2Name?: string;
+  skill2Level?: string;
+}
+
+const defaultSettings: Settings = {
+  name: "Hakim",
+  location: "Tanjungpinang",
+  aboutParagraph1: "Saya adalah seorang photo editor dan fotografer profesional yang berbasis di Tanjungpinang. Dengan pengalaman lebih dari 5 tahun dalam industri kreatif, saya telah membantu banyak klien mewujudkan visi visual mereka.",
+  aboutParagraph2: "Saya percaya bahwa setiap foto memiliki cerita. Tugas saya adalah membantu cerita tersebut bersinar melalui editing yang berkualitas dan perhatian pada detail terkecil.",
+  cvUrl: "",
+  statsYears: "5",
+  statsProjects: "200",
+  statsClients: "50",
+  statsAwards: "10",
+  skill1Name: "Photography",
+  skill1Level: "95",
+  skill2Name: "Photo Editing",
+  skill2Level: "90",
+};
+
+// Simple Animated Counter Component
+function AnimatedCounter({ value, isLoaded }: { value: number; isLoaded: boolean }) {
   const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (startOnView && !isInView) return;
-    if (hasStarted) return;
+    // Only animate when loaded AND in view AND haven't animated yet
+    if (!isLoaded || !isInView || hasAnimated.current) return;
 
-    setHasStarted(true);
+    hasAnimated.current = true;
+    const duration = 2000;
     let startTime: number;
     let animationFrame: number;
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-
-      // Easing function (ease-out)
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(easeOut * end));
+      setCount(Math.floor(easeOut * value));
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
@@ -33,21 +64,26 @@ function useCounter(end: number, duration: number = 2000, startOnView: boolean =
     };
 
     animationFrame = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration, isInView, startOnView, hasStarted]);
+  }, [value, isLoaded, isInView]);
 
-  return { count, ref };
+  return (
+    <div
+      ref={ref}
+      className="text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent mb-2"
+      style={{ minWidth: '80px', display: 'inline-block', textAlign: 'center' }}
+    >
+      {count}+
+    </div>
+  );
 }
 
-function AnimatedStat({ stat, index }: { stat: any; index: number }) {
-  const numericValue = parseInt(stat.number);
-  const { count, ref } = useCounter(numericValue, 2000);
+function StatCard({ stat, index, isLoaded }: { stat: any; index: number; isLoaded: boolean }) {
   const Icon = stat.icon;
+  const numericValue = parseInt(stat.number) || 0;
 
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -58,9 +94,7 @@ function AnimatedStat({ stat, index }: { stat: any; index: number }) {
         <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg`}>
           <Icon className="text-white" size={28} />
         </div>
-        <div className="text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent mb-2">
-          {count}+
-        </div>
+        <AnimatedCounter value={numericValue} isLoaded={isLoaded} />
         <div className="text-[var(--text-muted)] font-medium text-sm">
           {stat.label}
         </div>
@@ -70,16 +104,47 @@ function AnimatedStat({ stat, index }: { stat: any; index: number }) {
 }
 
 export default function About() {
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Fetch settings from database
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          console.log("About: Fetched settings:", data); // Debug log
+          // Only update values that exist and are not empty
+          const mergedSettings = { ...defaultSettings };
+          Object.keys(data).forEach((key) => {
+            if (data[key] !== undefined && data[key] !== null && data[key] !== "") {
+              (mergedSettings as any)[key] = data[key];
+            }
+          });
+          console.log("About: Merged settings:", mergedSettings); // Debug log
+          setSettings(mergedSettings);
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      } finally {
+        // Small delay to ensure state is updated before marking as loaded
+        setTimeout(() => setIsLoaded(true), 100);
+      }
+    }
+    fetchSettings();
+  }, []);
+
   const stats = [
-    { number: "5", label: "Years Experience", icon: Award, gradient: "from-teal-400 to-cyan-400" },
-    { number: "200", label: "Projects Completed", icon: Briefcase, gradient: "from-cyan-400 to-blue-400" },
-    { number: "50", label: "Happy Clients", icon: Users, gradient: "from-purple-400 to-pink-400" },
-    { number: "10", label: "Awards Won", icon: Trophy, gradient: "from-orange-400 to-yellow-400" },
+    { number: settings.statsYears || "5", label: "Years Experience", icon: Award, gradient: "from-teal-400 to-cyan-400" },
+    { number: settings.statsProjects || "200", label: "Projects Completed", icon: Briefcase, gradient: "from-cyan-400 to-blue-400" },
+    { number: settings.statsClients || "50", label: "Happy Clients", icon: Users, gradient: "from-purple-400 to-pink-400" },
+    { number: settings.statsAwards || "10", label: "Awards Won", icon: Trophy, gradient: "from-orange-400 to-yellow-400" },
   ];
 
   const skills = [
-    { name: "Photography", icon: Camera, level: 95 },
-    { name: "Photo Editing", icon: Palette, level: 90 },
+    { name: settings.skill1Name || "Photography", icon: Camera, level: parseInt(settings.skill1Level || "95") },
+    { name: settings.skill2Name || "Photo Editing", icon: Palette, level: parseInt(settings.skill2Level || "90") },
   ];
 
   return (
@@ -123,14 +188,16 @@ export default function About() {
           >
             <div className="space-y-6">
               <p className="text-gray-300 leading-relaxed text-lg">
-                Saya adalah seorang <span className="font-semibold text-teal-400">photo editor dan fotografer profesional</span> yang berbasis di Tanjungpinang. Dengan pengalaman lebih dari 5 tahun dalam industri kreatif, saya telah membantu banyak klien mewujudkan visi visual mereka.
+                Saya adalah seorang <span className="font-semibold text-teal-400">photo editor dan fotografer profesional</span> yang berbasis di {settings.location}. Dengan pengalaman lebih dari {settings.statsYears} tahun dalam industri kreatif, saya telah membantu banyak klien mewujudkan visi visual mereka.
               </p>
               <p className="text-gray-300 leading-relaxed text-lg">
-                Saya percaya bahwa setiap foto memiliki cerita. Tugas saya adalah membantu cerita tersebut bersinar melalui editing yang berkualitas dan perhatian pada detail terkecil.
+                {settings.aboutParagraph2}
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                 <motion.a
-                  href="#"
+                  href={settings.cvUrl || "#"}
+                  target={settings.cvUrl ? "_blank" : undefined}
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-8 py-3.5 rounded-full font-medium shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 transition-shadow flex items-center gap-2"
@@ -159,7 +226,7 @@ export default function About() {
             className="grid grid-cols-2 gap-6"
           >
             {stats.map((stat, index) => (
-              <AnimatedStat key={index} stat={stat} index={index} />
+              <StatCard key={`stat-${index}`} stat={stat} index={index} isLoaded={isLoaded} />
             ))}
           </motion.div>
         </div>
@@ -180,7 +247,7 @@ export default function About() {
               const Icon = skill.icon;
               return (
                 <motion.div
-                  key={index}
+                  key={`skill-${index}`}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -212,6 +279,6 @@ export default function About() {
           </div>
         </motion.div>
       </div>
-    </section >
+    </section>
   );
 }

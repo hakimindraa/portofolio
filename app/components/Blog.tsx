@@ -2,42 +2,92 @@
 
 import { motion } from "framer-motion";
 import { Clock, ArrowRight, Calendar, Tag } from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 
-const posts = [
+interface BlogPost {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    category: string;
+    coverImage: string | null;
+    readTime: number;
+    createdAt: string;
+}
+
+// Default posts (fallback if database is empty)
+const defaultPosts: BlogPost[] = [
     {
-        id: 1,
+        id: "1",
         title: "10 Tips Fotografi Portrait untuk Pemula",
+        slug: "tips-fotografi-portrait",
         excerpt: "Pelajari teknik dasar fotografi portrait yang akan meningkatkan kualitas foto Anda secara drastis...",
-        image: "/images/blog1.jpg",
         category: "Photography",
-        date: "20 Des 2024",
-        readTime: "5 min read",
-        color: "from-teal-400 to-cyan-400",
+        coverImage: null,
+        readTime: 5,
+        createdAt: new Date().toISOString(),
     },
     {
-        id: 2,
+        id: "2",
         title: "Trend Color Grading 2024",
+        slug: "trend-color-grading",
         excerpt: "Eksplorasi tren warna dan editing yang sedang populer di tahun ini untuk hasil yang stunning...",
-        image: "/images/blog2.jpg",
         category: "Editing",
-        date: "18 Des 2024",
-        readTime: "4 min read",
-        color: "from-purple-400 to-pink-400",
+        coverImage: null,
+        readTime: 4,
+        createdAt: new Date().toISOString(),
     },
     {
-        id: 3,
+        id: "3",
         title: "Memilih Lighting yang Tepat",
+        slug: "memilih-lighting",
         excerpt: "Panduan lengkap memahami pencahayaan untuk menghasilkan foto berkualitas profesional...",
-        image: "/images/blog3.jpg",
         category: "Tips",
-        date: "15 Des 2024",
-        readTime: "6 min read",
-        color: "from-orange-400 to-yellow-400",
+        coverImage: null,
+        readTime: 6,
+        createdAt: new Date().toISOString(),
     },
 ];
 
+// Gradient colors for fallback
+const gradientColors = [
+    "from-teal-400 to-cyan-400",
+    "from-purple-400 to-pink-400",
+    "from-orange-400 to-yellow-400",
+];
+
 export default function Blog() {
+    const [posts, setPosts] = useState<BlogPost[]>(defaultPosts);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        async function fetchPosts() {
+            try {
+                const res = await fetch("/api/blog");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setPosts(data.slice(0, 3)); // Only show first 3
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch blog posts:", error);
+            } finally {
+                setIsLoaded(true);
+            }
+        }
+        fetchPosts();
+    }, []);
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        });
+    };
+
     return (
         <section id="blog" className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
             {/* Background Decoration */}
@@ -81,10 +131,16 @@ export default function Blog() {
                             <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                                 {/* Image */}
                                 <div className="relative h-52 overflow-hidden">
-                                    <div className={`absolute inset-0 bg-gradient-to-r ${post.color} opacity-80`} />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-white/80 text-6xl font-bold">0{post.id}</span>
-                                    </div>
+                                    {post.coverImage ? (
+                                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <>
+                                            <div className={`absolute inset-0 bg-gradient-to-r ${gradientColors[index % 3]} opacity-80`} />
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <span className="text-white/80 text-6xl font-bold">0{index + 1}</span>
+                                            </div>
+                                        </>
+                                    )}
 
                                     {/* Category Badge */}
                                     <div className="absolute top-4 left-4">
@@ -101,11 +157,11 @@ export default function Blog() {
                                     <div className="flex items-center gap-4 text-sm text-[var(--text-muted)] mb-3">
                                         <span className="flex items-center gap-1.5">
                                             <Calendar size={14} />
-                                            {post.date}
+                                            {formatDate(post.createdAt)}
                                         </span>
                                         <span className="flex items-center gap-1.5">
                                             <Clock size={14} />
-                                            {post.readTime}
+                                            {post.readTime} min read
                                         </span>
                                     </div>
 
@@ -120,10 +176,13 @@ export default function Blog() {
                                     </p>
 
                                     {/* Read More */}
-                                    <span className="inline-flex items-center gap-2 text-teal-500 font-medium text-sm group-hover:gap-3 transition-all">
+                                    <a
+                                        href={`/blog/${post.slug}`}
+                                        className="inline-flex items-center gap-2 text-teal-500 font-medium text-sm group-hover:gap-3 transition-all"
+                                    >
                                         Read More
                                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </span>
+                                    </a>
                                 </div>
                             </div>
                         </motion.article>

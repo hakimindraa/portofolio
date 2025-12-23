@@ -36,7 +36,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main Content */}
-      <main>
+      <main className="relative">
         <Hero />
         <About />
         <Services />

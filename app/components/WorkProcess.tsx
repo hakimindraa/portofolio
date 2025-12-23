@@ -1,47 +1,96 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageSquare, Camera, Palette, Send, CheckCircle } from "lucide-react";
+import { MessageSquare, Camera, Palette, Send, CheckCircle, Zap, Star, Heart, Target, Award, Sparkles, LucideIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const steps = [
+interface WorkStep {
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+    color: string;
+    order: number;
+    active: boolean;
+}
+
+// Icon mapping
+const iconMap: Record<string, LucideIcon> = {
+    MessageSquare,
+    Camera,
+    Palette,
+    Send,
+    CheckCircle,
+    Zap,
+    Star,
+    Heart,
+    Target,
+    Award,
+    Sparkles,
+};
+
+// Default steps (fallback if database is empty)
+const defaultSteps = [
     {
-        id: 1,
-        icon: MessageSquare,
+        id: "1",
         title: "Konsultasi",
         description: "Diskusi kebutuhan dan visi proyek Anda. Saya akan mendengarkan dengan seksama untuk memahami ekspektasi Anda.",
+        icon: "MessageSquare",
         color: "from-teal-400 to-cyan-400",
     },
     {
-        id: 2,
-        icon: Camera,
+        id: "2",
         title: "Eksekusi",
         description: "Proses pengambilan foto atau pengerjaan desain dengan standar profesional dan perhatian pada detail.",
+        icon: "Camera",
         color: "from-cyan-400 to-blue-400",
     },
     {
-        id: 3,
-        icon: Palette,
+        id: "3",
         title: "Editing",
         description: "Post-processing dan retouching berkualitas tinggi untuk menghasilkan karya yang memukau.",
+        icon: "Palette",
         color: "from-blue-400 to-purple-400",
     },
     {
-        id: 4,
-        icon: Send,
+        id: "4",
         title: "Review",
         description: "Presentasi hasil untuk review. Revisi hingga Anda puas dengan hasil akhir.",
+        icon: "Send",
         color: "from-purple-400 to-pink-400",
     },
     {
-        id: 5,
-        icon: CheckCircle,
+        id: "5",
         title: "Delivery",
         description: "Pengiriman file final dalam berbagai format sesuai kebutuhan Anda.",
+        icon: "CheckCircle",
         color: "from-pink-400 to-orange-400",
     },
 ];
 
 export default function WorkProcess() {
+    const [steps, setSteps] = useState(defaultSteps);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        async function fetchSteps() {
+            try {
+                const res = await fetch("/api/work-steps");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setSteps(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch work steps:", error);
+            } finally {
+                setIsLoaded(true);
+            }
+        }
+        fetchSteps();
+    }, []);
+
     return (
         <section id="process" className="relative overflow-hidden py-24 px-6 bg-[#153448]">
             {/* Background Decoration */}
@@ -77,7 +126,7 @@ export default function WorkProcess() {
                     <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-400 via-purple-400 to-orange-400 transform md:-translate-x-1/2" />
 
                     {steps.map((step, index) => {
-                        const Icon = step.icon;
+                        const Icon = iconMap[step.icon] || MessageSquare;
                         const isEven = index % 2 === 0;
 
                         return (
@@ -98,7 +147,7 @@ export default function WorkProcess() {
                                     >
                                         <div className={`inline-flex items-center gap-3 mb-3 ${isEven ? "md:flex-row-reverse" : ""}`}>
                                             <span className={`text-4xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
-                                                0{step.id}
+                                                0{index + 1}
                                             </span>
                                             <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                                         </div>

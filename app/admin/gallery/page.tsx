@@ -79,6 +79,13 @@ export default function GalleryPage() {
         // Upload to Cloudinary
         setUploading(true);
         try {
+            // Delete old image when editing
+            if (editingPhoto && editingPhoto.imageUrl && editingPhoto.imageUrl.includes("cloudinary")) {
+                await fetch(`/api/admin/delete-image?url=${encodeURIComponent(editingPhoto.imageUrl)}`, {
+                    method: "DELETE",
+                });
+            }
+
             const formData = new FormData();
             formData.append("file", file);
 
@@ -137,6 +144,14 @@ export default function GalleryPage() {
         if (!confirm("Yakin ingin menghapus foto ini?")) return;
 
         try {
+            // Find the photo to delete its image from Cloudinary
+            const photoToDelete = photos.find((p) => p.id === id);
+            if (photoToDelete?.imageUrl && photoToDelete.imageUrl.includes("cloudinary")) {
+                await fetch(`/api/admin/delete-image?url=${encodeURIComponent(photoToDelete.imageUrl)}`, {
+                    method: "DELETE",
+                });
+            }
+
             const res = await fetch(`/api/admin/photos?id=${id}`, { method: "DELETE" });
             if (res.ok) {
                 setPhotos(photos.filter((p) => p.id !== id));

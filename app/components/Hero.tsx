@@ -2,11 +2,51 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Typewriter from "./Typewriter";
+
+interface Settings {
+  name?: string;
+  heroTagline?: string;
+  heroDescription?: string;
+  location?: string;
+  profileImage?: string;
+  statsYears?: string;
+  statsProjects?: string;
+  statsClients?: string;
+  title?: string;
+}
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [settings, setSettings] = useState<Settings>({
+    name: "Hakim",
+    heroTagline: "Photo Editing",
+    heroDescription: "Mengubah momen biasa menjadi karya seni yang memukau. Dengan pengalaman lebih dari 5 tahun dalam fotografi dan editing profesional.",
+    location: "Tanjungpinang",
+    profileImage: "/images/hero.jpg",
+    statsYears: "5",
+    statsProjects: "200",
+    statsClients: "50",
+    title: "Photo Editor",
+  });
+
+  // Fetch settings from database
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          setSettings((prev) => ({ ...prev, ...data }));
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      }
+    }
+    fetchSettings();
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -18,11 +58,17 @@ export default function Hero() {
   const imageY = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   const typewriterWords = [
-    "Photo Editing",
+    settings.heroTagline || "Photo Editing",
     "Portrait Photography",
     "Creative Design",
     "Color Grading",
     "Retouching",
+  ];
+
+  const stats = [
+    { value: `${settings.statsYears || "5"}+`, label: "Years" },
+    { value: `${settings.statsProjects || "200"}+`, label: "Projects" },
+    { value: `${settings.statsClients || "50"}+`, label: "Clients" },
   ];
 
   return (
@@ -85,7 +131,7 @@ export default function Hero() {
                 </motion.span>
 
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight mb-6">
-                  Hello, <span className="font-bold bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">I'm Hakim.</span>
+                  Hello, <span className="font-bold bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">I'm {settings.name}.</span>
                 </h1>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-8">
                   <Typewriter
@@ -96,10 +142,10 @@ export default function Hero() {
                     delayBetweenWords={2000}
                   />
                   <br />
-                  <span className="text-gray-400">in Tanjungpinang.</span>
+                  <span className="text-gray-400">in {settings.location}.</span>
                 </h2>
                 <p className="text-gray-400 leading-relaxed mb-10 max-w-xl text-lg">
-                  Mengubah momen biasa menjadi karya seni yang memukau. Dengan pengalaman lebih dari 5 tahun dalam fotografi dan editing profesional.
+                  {settings.heroDescription}
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <motion.a
@@ -122,11 +168,7 @@ export default function Hero() {
 
                 {/* Stats mini */}
                 <div className="flex gap-8 mt-12 pt-8 border-t border-white/10">
-                  {[
-                    { value: "5+", label: "Years" },
-                    { value: "200+", label: "Projects" },
-                    { value: "50+", label: "Clients" },
-                  ].map((stat, i) => (
+                  {stats.map((stat, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 20 }}
@@ -159,7 +201,7 @@ export default function Hero() {
                   {/* Image container */}
                   <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-white/10 shadow-2xl">
                     <Image
-                      src="/images/hero.jpg"
+                      src={settings.profileImage || "/images/hero.jpg"}
                       alt="Profile"
                       fill
                       priority
@@ -177,7 +219,7 @@ export default function Hero() {
                     transition={{ duration: 3, repeat: Infinity }}
                     className="absolute -bottom-4 -left-4 px-6 py-3 bg-white rounded-2xl shadow-xl"
                   >
-                    <span className="text-gray-800 font-semibold">📸 Photo Editor</span>
+                    <span className="text-gray-800 font-semibold">📸 {settings.title || "Photo Editor"}</span>
                   </motion.div>
                 </motion.div>
               </motion.div>
@@ -222,7 +264,7 @@ export default function Hero() {
         <div className="flex animate-scroll-reverse whitespace-nowrap">
           {[...Array(20)].map((_, i) => (
             <div key={i} className="flex items-center mx-6">
-              <span className="text-[#153448] font-medium text-lg">Photo Editing</span>
+              <span className="text-[#153448] font-medium text-lg">{settings.heroTagline || "Photo Editing"}</span>
               <span className="text-teal-500 text-2xl mx-3">◆</span>
             </div>
           ))}
