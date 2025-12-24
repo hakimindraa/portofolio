@@ -90,17 +90,17 @@ export default function Footer() {
       <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
 
       {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      <div className="relative max-w-7xl mx-auto px-6 py-12 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12 mb-12">
           {/* Brand Section */}
-          <div className="space-y-6">
-            <Link href="#home" className="text-white text-2xl font-bold tracking-tight">
+          <div className="space-y-3 md:space-y-6 col-span-2 md:col-span-1">
+            <Link href="#home" className="text-white text-xl md:text-2xl font-bold tracking-tight">
               Portfolio
             </Link>
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 text-sm md:text-base leading-relaxed">
               Creating stunning visuals and memorable experiences through photography and design.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2 md:gap-3">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
@@ -116,7 +116,7 @@ export default function Footer() {
                     className="footer-social"
                     aria-label={social.label}
                   >
-                    <Icon size={18} />
+                    <Icon size={16} className="md:w-[18px] md:h-[18px]" />
                   </motion.a>
                 );
               })}
@@ -125,11 +125,11 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Quick Links</h3>
-            <ul className="space-y-3">
+            <h3 className="text-white text-sm md:text-base font-semibold mb-3 md:mb-6">Quick Links</h3>
+            <ul className="space-y-2 md:space-y-3">
               {navigation.main.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className="footer-link inline-block">
+                  <a href={item.href} className="footer-link inline-block text-xs md:text-base">
                     {item.name}
                   </a>
                 </li>
@@ -139,11 +139,11 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Services</h3>
-            <ul className="space-y-3">
+            <h3 className="text-white text-sm md:text-base font-semibold mb-3 md:mb-6">Services</h3>
+            <ul className="space-y-2 md:space-y-3">
               {navigation.services.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className="footer-link inline-block">
+                  <a href={item.href} className="footer-link inline-block text-xs md:text-base">
                     {item.name}
                   </a>
                 </li>
@@ -152,24 +152,24 @@ export default function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div>
-            <h3 className="text-white font-semibold mb-6">Get in Touch</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-gray-300">
-                <Mail size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <a href={`mailto:${contactInfo.email}`} className="hover:text-white transition">
+          <div className="col-span-2 md:col-span-1">
+            <h3 className="text-white text-sm md:text-base font-semibold mb-3 md:mb-6">Get in Touch</h3>
+            <ul className="space-y-2 md:space-y-4">
+              <li className="flex items-start gap-2 md:gap-3 text-gray-300">
+                <Mail size={14} className="text-[#F4F4F4] mt-0.5 flex-shrink-0 md:w-[18px] md:h-[18px]" />
+                <a href={`mailto:${contactInfo.email}`} className="hover:text-white transition text-xs md:text-base break-all">
                   {contactInfo.email}
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Phone size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <a href={`tel:${contactInfo.phone.replace(/\s/g, "")}`} className="hover:text-white transition">
+              <li className="flex items-start gap-2 md:gap-3 text-gray-300">
+                <Phone size={14} className="text-[#F4F4F4] mt-0.5 flex-shrink-0 md:w-[18px] md:h-[18px]" />
+                <a href={`tel:${contactInfo.phone.replace(/\s/g, "")}`} className="hover:text-white transition text-xs md:text-base">
                   {contactInfo.phone}
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <MapPin size={18} className="text-[#F4F4F4] mt-1 flex-shrink-0" />
-                <span>{contactInfo.location}</span>
+              <li className="flex items-start gap-2 md:gap-3 text-gray-300">
+                <MapPin size={14} className="text-[#F4F4F4] mt-0.5 flex-shrink-0 md:w-[18px] md:h-[18px]" />
+                <span className="text-xs md:text-base">{contactInfo.location}</span>
               </li>
             </ul>
           </div>

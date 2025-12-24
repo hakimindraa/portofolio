@@ -110,7 +110,6 @@ export default function Hero() {
 
         {/* Content */}
         <motion.div
-          style={{ opacity, scale }}
           className="relative z-[2] text-white min-h-screen flex items-center pt-20 pb-20"
         >
           <div className="max-w-7xl mx-auto px-6 py-16 w-full">

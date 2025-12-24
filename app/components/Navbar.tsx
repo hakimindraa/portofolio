@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 
 const sections = [
@@ -113,51 +114,64 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </nav>
 
-      {/* Mobile Menu */}
-      <div
-        className={`fixed inset-0 z-40 bg-[#153448]/95 backdrop-blur-lg md:hidden transition-all duration-500 ease-in-out ${mobileMenu
-          ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 -translate-y-full pointer-events-none"
-          }`}
-      >
-        <div className="flex flex-col items-center justify-center h-full space-y-8">
-          {sections.map((sec, index) => (
-            <a
-              key={sec.id}
-              href={`#${sec.id}`}
-              onClick={() => {
-                setActive(sec.id);
-                setMobileMenu(false);
-              }}
-              className={`text-2xl font-medium transition-all duration-300 ${active === sec.id
-                ? "text-teal-400"
-                : "text-gray-400 hover:text-white"
-                }`}
-              style={{
-                transitionDelay: mobileMenu ? `${index * 100}ms` : "0ms",
-                opacity: mobileMenu ? 1 : 0,
-                transform: mobileMenu ? "translateY(0)" : "translateY(20px)",
-              }}
+        {/* Mobile Menu - Animated Dropdown */}
+        <AnimatePresence>
+          {mobileMenu && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="md:hidden absolute top-full left-0 right-0 bg-[#153448]/95 backdrop-blur-lg border-t border-white/10 shadow-xl overflow-hidden"
             >
-              {sec.label}
-            </a>
-          ))}
-          <a
-            href="#contact"
-            onClick={() => setMobileMenu(false)}
-            className="bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-8 py-3.5 rounded-full text-lg font-medium mt-6 transition-all duration-300"
-            style={{
-              transitionDelay: mobileMenu ? `${sections.length * 100}ms` : "0ms",
-              opacity: mobileMenu ? 1 : 0,
-              transform: mobileMenu ? "translateY(0)" : "translateY(20px)",
-            }}
-          >
-            Let's Talk
-          </a>
-        </div>
-      </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex flex-col px-6 py-4 space-y-1"
+              >
+                {sections.map((sec, index) => (
+                  <motion.a
+                    key={sec.id}
+                    href={`#${sec.id}`}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{
+                      delay: index * 0.05,
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                    onClick={() => {
+                      setActive(sec.id);
+                      setMobileMenu(false);
+                    }}
+                    className={`py-3 px-4 rounded-lg text-base font-medium transition-all duration-200 ${active === sec.id
+                      ? "text-teal-400 bg-white/10"
+                      : "text-gray-300 hover:text-white hover:bg-white/5 hover:translate-x-2"
+                      }`}
+                  >
+                    {sec.label}
+                  </motion.a>
+                ))}
+                <motion.a
+                  href="#contact"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ delay: 0.25, duration: 0.3 }}
+                  onClick={() => setMobileMenu(false)}
+                  className="mt-3 bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-6 py-3 rounded-full text-base font-medium text-center hover:shadow-lg hover:shadow-teal-500/30 transition-all duration-300"
+                >
+                  Let's Talk
+                </motion.a>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
     </>
   );
 }

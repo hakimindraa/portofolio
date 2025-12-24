@@ -109,36 +109,20 @@ body {
    AGGRESSIVE FIX FOR JITTER / VIBRATION
    ======================================== */
 
-/* Disable ALL animations globally to test if this fixes jitter */
-/* Comment this block out if you want animations back */
-*,
-*::before,
-*::after {
+/* Disable animations globally EXCEPT for navbar elements */
+*:not(nav):not(nav *),
+*:not(nav):not(nav *)::before,
+*:not(nav):not(nav *)::after {
   animation: none !important;
   transition: none !important;
 }
 
-/* Force hardware acceleration and prevent backface issues */
-html {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-/* Prevent transform jitter */
+/* Prevent transform jitter on elements with inline transforms */
 [style*="transform"] {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-}
-
-/* Fixed elements stability */
-.fixed,
-[class*="fixed"] {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 /* Prevent counter animations from causing layout shifts */
@@ -433,12 +417,20 @@ html {
 /* Services Card Styles */
 .service-card {
   position: relative;
-  padding: 2.5rem;
-  border-radius: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 1rem;
   background: #f4f4f4;
   border: 1px solid #e5e7eb;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+}
+
+/* Desktop padding */
+@media (min-width: 768px) {
+  .service-card {
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+  }
 }
 
 .service-card::before {
@@ -464,14 +456,23 @@ html {
 }
 
 .service-icon {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   background: linear-gradient(135deg, #d1e7f0 0%, #b3d9ea 100%);
   transition: all 0.3s ease;
+}
+
+/* Desktop icon size */
+@media (min-width: 768px) {
+  .service-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 1rem;
+  }
 }
 
 .service-card:hover .service-icon {
@@ -485,12 +486,21 @@ html {
 
 .service-number {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  font-size: 3rem;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #e5e7eb;
   transition: color 0.3s ease;
+}
+
+/* Desktop number size */
+@media (min-width: 768px) {
+  .service-number {
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 3rem;
+  }
 }
 
 .service-card:hover .service-number {

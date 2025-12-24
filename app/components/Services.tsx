@@ -117,7 +117,7 @@ export default function Services() {
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {services.map((service, index) => {
             const Icon = iconMap[service.icon] || Camera;
             return (
@@ -131,19 +131,19 @@ export default function Services() {
               >
                 <span className="service-number">0{index + 1}</span>
 
-                <div className="service-icon mb-6">
-                  <Icon className="text-[#153448]" size={32} strokeWidth={1.5} />
+                <div className="service-icon mb-3 md:mb-6">
+                  <Icon className="text-[#153448]" size={24} strokeWidth={1.5} />
                 </div>
 
-                <h3 className="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-[#153448] transition-colors">
+                <h3 className="text-base md:text-2xl font-semibold mb-2 md:mb-4 text-gray-900 group-hover:text-[#153448] transition-colors leading-tight">
                   {service.title}
                 </h3>
 
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-xs md:text-base text-gray-600 leading-relaxed line-clamp-3 md:line-clamp-none">
                   {service.description}
                 </p>
 
-                <div className="mt-6 inline-flex items-center text-[#153448] font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-4 md:mt-6 hidden md:inline-flex items-center text-[#153448] font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                   Learn More
                   <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
