@@ -148,7 +148,10 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="section-glass-dark relative overflow-hidden py-24 px-6">
+    <section id="about" className="section-glass-dark relative overflow-hidden -mt-20 pt-7 pb-24 px-6">
+      {/* Top gradient transition from Hero - extended for smooth blend */}
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#153448] via-[#153448]/70 to-transparent pointer-events-none z-10" />
+
       {/* Light Reflection Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-20 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-teal-400/20 via-cyan-400/10 to-transparent rounded-full blur-3xl" />
@@ -156,8 +159,8 @@ export default function About() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px]" />
       </div>
 
-      {/* Inner Shadow Overlay */}
-      <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.3)] pointer-events-none" />
+      {/* Inner Shadow Overlay - softened */}
+      <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.15)] pointer-events-none" />
 
       {/* Content */}
       <div className="relative max-w-7xl mx-auto">

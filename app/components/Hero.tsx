@@ -73,7 +73,7 @@ export default function Hero() {
 
   return (
     <>
-      <section ref={sectionRef} id="home" className="relative overflow-hidden bg-[#0d1f2d] min-h-screen">
+      <section ref={sectionRef} id="home" className="relative overflow-hidden bg-[#153448] min-h-screen">
         {/* Base gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#153448] via-[#0d2330] to-[#0a1a24]" />
 
@@ -105,8 +105,8 @@ export default function Hero() {
         <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')]" />
 
         {/* Gradient Overlays for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#153448]/30 to-[#0d1f2d] z-[1]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d1f2d]/60 via-transparent to-[#0d1f2d]/40 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#153448]/30 to-[#153448] z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#153448]/60 via-transparent to-[#153448]/40 z-[1]" />
 
         {/* Content */}
         <motion.div
@@ -231,7 +231,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[2]"
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-[2]"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
@@ -244,30 +244,33 @@ export default function Hero() {
             </svg>
           </motion.div>
         </motion.div>
+
+        {/* Smooth gradient transition to next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-[#153448]/50 to-[#153448] pointer-events-none z-[3]" />
       </section>
 
-      {/* Scrolling Text */}
-      <div className="bg-gradient-to-r from-teal-500 to-cyan-500 py-4 overflow-hidden relative border-y-4 border-[#153448] rotate-[-4deg] -mt-21">
-        <div className="flex animate-scroll whitespace-nowrap">
-          {[...Array(20)].map((_, i) => (
-            <div key={i} className="flex items-center mx-6">
-              <span className="text-white font-medium text-lg">Photographer</span>
-              <span className="text-white/80 text-2xl mx-3">◆</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Scrolling Text */}
-      <div className="bg-white py-4 overflow-hidden relative border-y-4 border-[#153448] rotate-[0deg] my-1.7">
-        <div className="flex animate-scroll-reverse whitespace-nowrap">
-          {[...Array(20)].map((_, i) => (
-            <div key={i} className="flex items-center mx-6">
-              <span className="text-[#153448] font-medium text-lg">{settings.heroTagline || "Photo Editing"}</span>
-              <span className="text-teal-500 text-2xl mx-3">◆</span>
-            </div>
-          ))}
+
+
+
+      {/* Scrolling Text with smooth transition */}
+      <div className="relative -mt-8">
+        {/* Top gradient fade - extended for smoother blend */}
+        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#153448] via-[#153448]/60 to-transparent z-10 pointer-events-none" />
+
+        <div className="bg-gradient-to-r from-white/95 via-white to-white/95 py-4 overflow-hidden relative">
+          <div className="flex animate-scroll-reverse whitespace-nowrap">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="flex items-center mx-6">
+                <span className="text-[#153448] font-medium text-lg">{settings.heroTagline || "Photo Editing"}</span>
+                <span className="text-teal-500 text-2xl mx-3">◆</span>
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Bottom gradient fade - extended for smoother blend */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#153448] via-[#153448]/60 to-transparent z-10 pointer-events-none" />
       </div>
 
       <style jsx>{`

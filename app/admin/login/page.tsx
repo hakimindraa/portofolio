@@ -135,9 +135,12 @@ export default function AdminLoginPage() {
                     </form>
                 </div>
 
-                {/* Back to Home */}
-                <div className="text-center mt-6">
-                    <a href="/" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                {/* Forgot Password & Back to Home */}
+                <div className="text-center mt-6 space-y-3">
+                    <a href="/admin/reset-password" className="block text-teal-400 hover:text-teal-300 transition-colors text-sm font-medium">
+                        Lupa Password?
+                    </a>
+                    <a href="/" className="block text-gray-400 hover:text-teal-400 transition-colors text-sm">
                         ← Kembali ke Homepage
                     </a>
                 </div>

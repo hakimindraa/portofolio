@@ -67,7 +67,7 @@ export default function InstagramFeed() {
     }, []);
 
     return (
-        <section className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
+        <section className="relative overflow-hidden pt-1 pb-24 px-6 bg-[var(--bg)]">
             {/* Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-full blur-3xl" />

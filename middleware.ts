@@ -8,6 +8,6 @@ export default withAuth({
 
 export const config = {
     matcher: [
-        "/admin/((?!login).*)",
+        "/admin/((?!login|reset-password).*)",
     ],
 };

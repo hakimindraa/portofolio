@@ -98,7 +98,7 @@ export default function Testimonials() {
                 </motion.div>
 
                 {/* Testimonials Grid */}
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-4 md:gap-8">
                     {testimonials.map((testimonial, index) => (
                         <motion.div
                             key={testimonial.id}
@@ -108,38 +108,38 @@ export default function Testimonials() {
                             viewport={{ once: true }}
                             className="relative group"
                         >
-                            <div className="bg-[var(--card-bg)] p-8 rounded-2xl border border-[var(--card-border)] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                            <div className="bg-[var(--card-bg)] p-4 md:p-8 rounded-2xl border border-[var(--card-border)] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                                 {/* Quote Icon */}
-                                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg">
-                                    <Quote className="w-6 h-6 text-white" />
+                                <div className="absolute -top-3 -left-3 w-8 h-8 md:w-12 md:h-12 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg">
+                                    <Quote className="w-4 h-4 md:w-6 md:h-6 text-white" />
                                 </div>
 
                                 {/* Rating */}
                                 <div className="flex gap-1 mb-4 ml-6">
                                     {[...Array(testimonial.rating || 5)].map((_, i) => (
-                                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                                        <Star key={i} className="w-3 h-3 md:w-5 md:h-5 text-yellow-400 fill-yellow-400" />
                                     ))}
                                 </div>
 
                                 {/* Text */}
-                                <p className="text-[var(--text-muted)] leading-relaxed mb-6 italic">
+                                <p className="text-xs md:text-base text-[var(--text-muted)] leading-relaxed mb-4 md:mb-6 italic">
                                     "{testimonial.content}"
                                 </p>
 
                                 {/* Author */}
                                 <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 p-0.5">
+                                    <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 p-0.5">
                                         {testimonial.avatar ? (
                                             <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full rounded-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full rounded-full bg-[var(--card-bg)] flex items-center justify-center text-xl font-bold text-teal-500">
+                                            <div className="w-full h-full rounded-full bg-[var(--card-bg)] flex items-center justify-center text-sm md:text-xl font-bold text-teal-500">
                                                 {testimonial.name.charAt(0)}
                                             </div>
                                         )}
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold text-[var(--text)]">{testimonial.name}</h4>
-                                        <p className="text-sm text-[var(--text-muted)]">{testimonial.role}</p>
+                                        <h4 className="font-semibold text-xs md:text-base text-[var(--text)]">{testimonial.name}</h4>
+                                        <p className="text-[10px] md:text-sm text-[var(--text-muted)]">{testimonial.role}</p>
                                     </div>
                                 </div>
                             </div>

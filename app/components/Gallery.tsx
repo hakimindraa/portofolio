@@ -55,7 +55,7 @@ export default function Gallery() {
     : displayPhotos.filter((p) => p.category === activeCategory);
 
   return (
-    <section id="gallery" className="relative overflow-hidden py-24 px-6">
+    <section id="gallery" className="relative overflow-hidden pt-8 pb-24 px-6">
       {/* Background (non-rotated for mobile consistency) */}
       <div className="absolute inset-0 bg-[#153448] shadow-[0_10px_30px_rgba(255,255,255,0.1)]"></div>
 

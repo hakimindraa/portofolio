@@ -89,7 +89,7 @@ export default function Blog() {
     };
 
     return (
-        <section id="blog" className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
+        <section id="blog" className="relative overflow-hidden pt-1 pb-24 px-6 bg-[var(--bg)]">
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-full blur-3xl" />
@@ -118,7 +118,7 @@ export default function Blog() {
                 </motion.div>
 
                 {/* Blog Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {posts.map((post, index) => (
                         <motion.article
                             key={post.id}
@@ -152,36 +152,36 @@ export default function Blog() {
                                 </div>
 
                                 {/* Content */}
-                                <div className="p-6">
+                                <div className="p-3 md:p-6">
                                     {/* Meta */}
-                                    <div className="flex items-center gap-4 text-sm text-[var(--text-muted)] mb-3">
+                                    <div className="flex items-center gap-2 md:gap-4 text-[10px] md:text-sm text-[var(--text-muted)] mb-2 md:mb-3">
                                         <span className="flex items-center gap-1.5">
-                                            <Calendar size={14} />
+                                            <Calendar size={10} className="md:w-[14px] md:h-[14px]" />
                                             {formatDate(post.createdAt)}
                                         </span>
                                         <span className="flex items-center gap-1.5">
-                                            <Clock size={14} />
+                                            <Clock size={10} className="md:w-[14px] md:h-[14px]" />
                                             {post.readTime} min read
                                         </span>
                                     </div>
 
                                     {/* Title */}
-                                    <h3 className="text-xl font-semibold text-[var(--text)] mb-3 group-hover:text-teal-500 transition-colors line-clamp-2">
+                                    <h3 className="text-sm md:text-xl font-semibold text-[var(--text)] mb-2 md:mb-3 group-hover:text-teal-500 transition-colors line-clamp-2">
                                         {post.title}
                                     </h3>
 
                                     {/* Excerpt */}
-                                    <p className="text-[var(--text-muted)] text-sm leading-relaxed line-clamp-2 mb-4">
+                                    <p className="text-[var(--text-muted)] text-[10px] md:text-sm leading-relaxed line-clamp-2 mb-2 md:mb-4">
                                         {post.excerpt}
                                     </p>
 
                                     {/* Read More */}
                                     <a
                                         href={`/blog/${post.slug}`}
-                                        className="inline-flex items-center gap-2 text-teal-500 font-medium text-sm group-hover:gap-3 transition-all"
+                                        className="inline-flex items-center gap-1 md:gap-2 text-teal-500 font-medium text-xs md:text-sm group-hover:gap-3 transition-all"
                                     >
                                         Read More
-                                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                        <ArrowRight size={12} className="md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
                                     </a>
                                 </div>
                             </div>

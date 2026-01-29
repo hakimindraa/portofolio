@@ -118,7 +118,7 @@ export default function Pricing() {
     };
 
     return (
-        <section id="pricing" className="relative overflow-hidden py-24 px-6 bg-[var(--bg)]">
+        <section id="pricing" className="relative overflow-hidden pt-1 pb-24 px-6 bg-[var(--bg)]">
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-40 right-20 w-80 h-80 bg-gradient-to-r from-teal-400/10 to-cyan-400/10 rounded-full blur-3xl" />
@@ -147,7 +147,7 @@ export default function Pricing() {
                 </motion.div>
 
                 {/* Pricing Cards */}
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-3 gap-2 md:gap-8">
                     {plans.map((plan, index) => {
                         const Icon = iconMap[plan.icon] || Zap;
                         const features = parseFeatures(plan.features);
@@ -163,7 +163,7 @@ export default function Pricing() {
                                 {/* Popular Badge */}
                                 {plan.popular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                                        <span className="px-4 py-1 bg-gradient-to-r from-teal-400 to-cyan-400 text-white text-sm font-medium rounded-full shadow-lg">
+                                        <span className="px-2 py-0.5 md:px-4 md:py-1 bg-gradient-to-r from-teal-400 to-cyan-400 text-white text-[8px] md:text-sm font-medium rounded-full shadow-lg">
                                             Most Popular
                                         </span>
                                     </div>
@@ -175,30 +175,30 @@ export default function Pricing() {
                                         : "border-[var(--card-border)] hover:border-teal-400/50"
                                         }`}
                                 >
-                                    <div className="p-8">
+                                    <div className="p-3 md:p-8">
                                         {/* Icon */}
-                                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${plan.color} flex items-center justify-center mb-6`}>
-                                            <Icon className="w-8 h-8 text-white" />
+                                        <div className={`w-8 h-8 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-r ${plan.color} flex items-center justify-center mb-3 md:mb-6`}>
+                                            <Icon className="w-4 h-4 md:w-8 md:h-8 text-white" />
                                         </div>
 
                                         {/* Plan Name */}
-                                        <h3 className="text-2xl font-bold text-[var(--text)] mb-2">{plan.name}</h3>
-                                        <p className="text-[var(--text-muted)] text-sm mb-6">{plan.description}</p>
+                                        <h3 className="text-xs md:text-2xl font-bold text-[var(--text)] mb-1 md:mb-2">{plan.name}</h3>
+                                        <p className="text-[var(--text-muted)] text-[8px] md:text-sm mb-3 md:mb-6 line-clamp-2">{plan.description}</p>
 
                                         {/* Price */}
-                                        <div className="mb-8">
-                                            <span className="text-4xl font-bold text-[var(--text)]">Rp {plan.price}</span>
-                                            <span className="text-[var(--text-muted)] ml-2">/{plan.period}</span>
+                                        <div className="mb-4 md:mb-8">
+                                            <span className="text-sm md:text-4xl font-bold text-[var(--text)]">Rp {plan.price}</span>
+                                            <span className="text-[var(--text-muted)] text-[8px] md:text-base ml-1 md:ml-2">/{plan.period}</span>
                                         </div>
 
                                         {/* Features */}
-                                        <ul className="space-y-4 mb-8">
+                                        <ul className="space-y-1 md:space-y-4 mb-4 md:mb-8">
                                             {features.map((feature, i) => (
-                                                <li key={i} className="flex items-center gap-3">
-                                                    <div className={`w-5 h-5 rounded-full bg-gradient-to-r ${plan.color} flex items-center justify-center flex-shrink-0`}>
-                                                        <Check className="w-3 h-3 text-white" />
+                                                <li key={i} className="flex items-center gap-1 md:gap-3">
+                                                    <div className={`w-3 h-3 md:w-5 md:h-5 rounded-full bg-gradient-to-r ${plan.color} flex items-center justify-center flex-shrink-0`}>
+                                                        <Check className="w-2 h-2 md:w-3 md:h-3 text-white" />
                                                     </div>
-                                                    <span className="text-[var(--text-muted)]">{feature}</span>
+                                                    <span className="text-[var(--text-muted)] text-[8px] md:text-base">{feature}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -208,7 +208,7 @@ export default function Pricing() {
                                             href="#contact"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className={`block w-full py-4 rounded-full text-center font-semibold transition-all duration-300 ${plan.popular
+                                            className={`block w-full py-2 md:py-4 rounded-full text-center text-[10px] md:text-base font-semibold transition-all duration-300 ${plan.popular
                                                 ? "bg-gradient-to-r from-teal-400 to-cyan-400 text-white shadow-lg hover:shadow-teal-500/30"
                                                 : "bg-[var(--bg-secondary)] text-[var(--text)] hover:bg-gradient-to-r hover:from-teal-400 hover:to-cyan-400 hover:text-white"
                                                 }`}
