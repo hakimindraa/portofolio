@@ -3,16 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import cloudinary from "@/lib/cloudinary";
 
-// Increase body size limit to 10MB for image uploads
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '10mb',
-        },
-    },
-};
-
-// Also set runtime config for App Router
+// Runtime config for App Router
 export const runtime = 'nodejs';
 export const maxDuration = 60; // 60 seconds timeout
 
